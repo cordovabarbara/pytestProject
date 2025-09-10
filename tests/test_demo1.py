@@ -15,3 +15,6 @@ def test_firstProgram(setup):
 def test_greting():
     print("Good Morning")
 
+def test_crossBrowser(crossBrowser):
+    print(crossBrowser)
+
