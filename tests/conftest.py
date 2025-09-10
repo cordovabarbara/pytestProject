@@ -6,6 +6,11 @@ def setup():
     yield
     print("I will be executing last")
 
+@pytest.fixture()
+def dataLoad():
+    print("user profile data is being created")
+    return["Barbara", "Cordova", "barbara@gmail.com"]
+
 #Makes the fixtures available to all test files in the same directory.
 #scope="class" in conftest.py
 #The fixture is executed only once per class, not for each function.
