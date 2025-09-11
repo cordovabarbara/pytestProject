@@ -1,4 +1,11 @@
 import pytest
+from selenium import webdriver
+
+def pytest_addoption(parser):
+    parser.addoption(
+        "--browser_name", action="store", default="chrome", help="browser selection"
+    )
+
 
 @pytest.fixture(scope="class")
 def setup():
@@ -15,6 +22,21 @@ def dataLoad():
 def crossBrowser(request):
     return request.param
 
+
+#Fixture para inicializar el navegador
+@pytest.fixture(scope="function")
+def browserInstance(request):
+    browser_name = request.config.getoption("browser_name")
+    if browser_name == "chrome":
+        driver = webdriver.Chrome()
+    elif browser_name == "firefox":
+        driver = webdriver.Firefox()
+
+    driver.maximize_window()
+    driver.implicitly_wait(5)
+
+    yield driver
+    driver.quit()
 
 #Makes the fixtures available to all test files in the same directory.
 #scope="class" in conftest.py
