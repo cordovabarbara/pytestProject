@@ -4,26 +4,36 @@ from selenium.webdriver.support import expected_conditions as EC
 
 
 class ShopPage:
+    shop_link = (By.CSS_SELECTOR, "a[href*='shop']")
+    products_cards = (By.XPATH, "//div[@class='card h-100']")
+    cart_button = (By.CSS_SELECTOR, "a[class*='btn-primary']")   # arriba a la derecha
+
     def __init__(self, driver):
         self.driver = driver
-        self.wait = WebDriverWait(driver, 5)
-
-        self.shop_link = (By.CSS_SELECTOR, "a[href*='shop']")
-        self.products_cards = (By.XPATH, "//div[@class='card h-100']")
-        self.checkout_button = (By.CSS_SELECTOR, "a[class*='btn-primary']")
+        self.wait = WebDriverWait(driver, 10)
 
     def open_shop(self):
         self.driver.find_element(*self.shop_link).click()
 
     def add_product_to_cart(self, product_name):
-        products = self.wait.until(EC.presence_of_all_elements_located(self.products_cards))
+        products = self.wait.until(
+            EC.presence_of_all_elements_located(self.products_cards)
+        )
 
         for product in products:
-            productName = product.find_element(By.XPATH, "div/h4/a").text
-            if productName == product_name:
-                product.find_element(By.XPATH, "div/button").click()
+            productName = product.find_element(By.XPATH, ".//h4/a").text.strip()
+            if productName.lower() == product_name.lower():
+                add_button = product.find_element(By.CSS_SELECTOR, "div.card-footer button.btn.btn-info")
+                add_button.click()
                 break
 
 
+        cart_text = self.wait.until(
+            EC.presence_of_element_located(self.cart_button)
+        ).text
+        print("Cart button text:", cart_text)
+
     def go_to_cart(self):
-        self.driver.find_element(*self.checkout_button).click()
+        self.driver.find_element(*self.cart_button).click()
+
+
