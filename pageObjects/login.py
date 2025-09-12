@@ -1,6 +1,7 @@
 from selenium.webdriver.common.by import By
 from selenium.webdriver.support.ui import WebDriverWait
 from selenium.webdriver.support import expected_conditions as EC
+from pageObjects.shop import ShopPage
 
 
 class LoginPage:
@@ -16,11 +17,12 @@ class LoginPage:
     def set_username(self, username):
         element = self.wait.until(EC.visibility_of_element_located(self.username_input))
         element.clear()
-        self.driver.find_element(*self.username_input).send_keys(username)
+        element.send_keys(username)
 
     def set_password(self, password):
-        self.wait.until(EC.visibility_of_element_located(self.password_input))
-        self.driver.find_element(*self.password_input).send_keys(password)
+        element = self.wait.until(EC.visibility_of_element_located(self.password_input))
+        element.clear()
+        element.send_keys(password)
 
     def click_login(self):
         self.driver.find_element(*self.sign_button).click()
@@ -29,3 +31,6 @@ class LoginPage:
         self.set_username(username)
         self.set_password(password)
         self.click_login()
+
+        self.wait.until(EC.presence_of_element_located(ShopPage.shop_link))
+        return ShopPage(self.driver)
