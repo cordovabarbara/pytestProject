@@ -1,5 +1,8 @@
 import pytest
 from selenium import webdriver
+from selenium.webdriver.chrome.service import Service
+from selenium.webdriver.chrome.options import Options
+
 
 def pytest_addoption(parser):
     parser.addoption(
@@ -13,22 +16,38 @@ def setup():
     yield
     print("I will be executing last")
 
+
 @pytest.fixture()
 def dataLoad():
     print("user profile data is being created")
-    return["Barbara", "Cordova", "barbara@gmail.com"]
+    return ["Barbara", "Cordova", "barbara@gmail.com"]
 
-@pytest.fixture(params=[("barbara", "cordova"),"chrome","Firefox","IE"])
+
+@pytest.fixture(params=[("barbara", "cordova"), "chrome", "Firefox", "IE"])
 def crossBrowser(request):
     return request.param
 
 
-#Fixture para inicializar el navegador
+# Fixture para inicializar el navegador
 @pytest.fixture(scope="function")
 def browserInstance(request):
     browser_name = request.config.getoption("browser_name")
+
     if browser_name == "chrome":
-        driver = webdriver.Chrome()
+        chrome_options = Options()
+        prefs = {
+            "credentials_enable_service": False,
+            "profile.password_manager_enabled": False
+        }
+        chrome_options.add_experimental_option("prefs", prefs)
+        chrome_options.add_argument("--start-maximized")
+        chrome_options.add_argument("--disable-save-password-bubble")
+        chrome_options.add_argument("--disable-features=PasswordManager,AutofillSaveCard")
+        chrome_options.add_argument("--incognito")
+        chrome_options.add_argument("--log-level=3")
+
+        driver = webdriver.Chrome(service=Service(), options=chrome_options)
+
     elif browser_name == "firefox":
         driver = webdriver.Firefox()
 
@@ -37,9 +56,3 @@ def browserInstance(request):
 
     yield driver
     driver.quit()
-
-#Makes the fixtures available to all test files in the same directory.
-#scope="class" in conftest.py
-#The fixture is executed only once per class, not for each function.
-#Setup runs at the beginning of the class.
-#Teardown (after the yield) runs at the end of the class.
