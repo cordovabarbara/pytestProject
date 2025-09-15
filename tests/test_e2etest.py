@@ -1,10 +1,5 @@
 
-from selenium.webdriver.common.by import By
-from selenium.webdriver.support import expected_conditions as EC
-from selenium.webdriver.support.wait import WebDriverWait
-
 from pageObjects.login import LoginPage
-from pageObjects.shop import ShopPage
 
 
 
@@ -16,8 +11,13 @@ def test_e2e(browserInstance):
     shop_page = LoginPage(driver).login()
 
     #Add product to cart
-    shop_page.add_product_to_cart("Samsung Note 8")
+    shop_page.add_product_to_cart("iphone X")
 
     #Go to cart
-    shop_page.go_to_cart()
+    checkout_confirmation = shop_page.go_to_cart()
+
+    #Checkout
+    checkout_confirmation.checkout()
+    checkout_confirmation.enter_delivery_address("spain")
+    checkout_confirmation.validate_order()
 
