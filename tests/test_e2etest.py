@@ -1,6 +1,5 @@
 import json
 import pytest
-from pageObjects.login import LoginPage
 
 test_data_path = r"C:\Users\Anais\PycharmProjects\pytestProject\data\test_e2etest.json"
 with open (test_data_path) as f:
@@ -9,14 +8,11 @@ with open (test_data_path) as f:
 
 
 @pytest.mark.parametrize("test_list_item", test_list)
-def test_e2e(browserInstance, test_list_item):
-    driver = browserInstance
-    driver.get("https://rahulshettyacademy.com/loginpagePractise/")
-
+def test_e2e(login, test_list_item):
     #Login
-    shop_page = LoginPage(driver).login(
-        username=test_list_item["userEmail"],
-        password=test_list_item["userPassword"]
+    shop_page = login(
+        test_list_item["userEmail"],
+        test_list_item["userPassword"]
     )
 
     #Add product to cart
@@ -29,4 +25,3 @@ def test_e2e(browserInstance, test_list_item):
     checkout_confirmation.checkout()
     checkout_confirmation.enter_delivery_address(test_list_item["deliveryAddress"])
     checkout_confirmation.validate_order()
-

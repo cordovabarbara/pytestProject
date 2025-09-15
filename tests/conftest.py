@@ -2,6 +2,7 @@ import pytest
 from selenium import webdriver
 from selenium.webdriver.chrome.service import Service
 from selenium.webdriver.chrome.options import Options
+from pageObjects.login import LoginPage
 
 
 def pytest_addoption(parser):
@@ -26,6 +27,17 @@ def dataLoad():
 @pytest.fixture(params=[("barbara", "cordova"), "chrome", "Firefox", "IE"])
 def crossBrowser(request):
     return request.param
+
+from pageObjects.login import LoginPage
+
+@pytest.fixture
+def login(browserInstance):
+    def _login(userEmail, userPassword):
+        driver = browserInstance
+        driver.get("https://rahulshettyacademy.com/loginpagePractise/")
+        return LoginPage(driver).login(userEmail, userPassword)
+    return _login
+
 
 
 # Fixture para inicializar el navegador
@@ -53,6 +65,7 @@ def browserInstance(request):
 
     driver.maximize_window()
     driver.implicitly_wait(5)
+
 
     yield driver
     driver.quit()
