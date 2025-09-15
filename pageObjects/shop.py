@@ -21,7 +21,7 @@ class ShopPage:
 
         for product in products:
             name = product.find_element(By.XPATH, ".//h4/a").text
-            if name.strip() == product_name:
+            if name.strip().lower() == product_name.strip().lower():
                 product.find_element(By.XPATH, ".//button").click()
                 print(f"✅ Product added to cart: {product_name}")
                 break
