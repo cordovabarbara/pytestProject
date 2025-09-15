@@ -27,7 +27,7 @@ class LoginPage:
     def click_login(self):
         self.driver.find_element(*self.sign_button).click()
 
-    def login(self,username="rahulshettyacademy", password="learning"):
+    def login(self,username, password):
         self.set_username(username)
         self.set_password(password)
         self.click_login()

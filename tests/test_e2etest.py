@@ -1,23 +1,32 @@
-
+import json
+import pytest
 from pageObjects.login import LoginPage
 
+test_data_path = r"C:\Users\Anais\PycharmProjects\pytestProject\data\test_e2etest.json"
+with open (test_data_path) as f:
+    test_data = json.load(f)
+    test_list = test_data["data"]
 
 
-def test_e2e(browserInstance):
+@pytest.mark.parametrize("test_list_item", test_list)
+def test_e2e(browserInstance, test_list_item):
     driver = browserInstance
     driver.get("https://rahulshettyacademy.com/loginpagePractise/")
 
     #Login
-    shop_page = LoginPage(driver).login()
+    shop_page = LoginPage(driver).login(
+        username=test_list_item["userEmail"],
+        password=test_list_item["userPassword"]
+    )
 
     #Add product to cart
-    shop_page.add_product_to_cart("iphone X")
+    shop_page.add_product_to_cart(test_list_item["productName"])
 
     #Go to cart
     checkout_confirmation = shop_page.go_to_cart()
 
     #Checkout
     checkout_confirmation.checkout()
-    checkout_confirmation.enter_delivery_address("spain")
+    checkout_confirmation.enter_delivery_address(test_list_item["deliveryAddress"])
     checkout_confirmation.validate_order()
 

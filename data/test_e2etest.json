@@ -1,0 +1,16 @@
+{
+  "data" : [
+    {
+      "userEmail": "rahulshettyacademy",
+      "userPassword": "learning",
+      "productName": "Nokia Edge",
+      "deliveryAddress": "Spain"
+    },
+    {
+      "userEmail": "rahulshettyacademy",
+      "userPassword": "learning",
+      "productName": "BLACKBERRY",
+      "deliveryAddress": "Russia"
+    }
+  ]
+}
